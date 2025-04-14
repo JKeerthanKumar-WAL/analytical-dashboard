@@ -1,0 +1,24 @@
+// frontend/src/components/TrafficDashboard.scss
+.traffic-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  
+    .metric-cards {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+  
+    .charts {
+      width: 100%;
+      height: 350px;
+    }
+  
+    @media (max-width: 768px) {
+      flex-direction: column;
+      .metric-cards {
+        flex-direction: column;
+      }
+    }
+  }

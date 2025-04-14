@@ -1,0 +1,73 @@
+# System Architecture for Real-Time Analytics Dashboard
+
+## 1. System Architecture Diagram
+
+ ____________                                ________________
+|            |   HTTP Requests - Pooling    |                |          
+|  Frontend  |  <----------------------->   |    Backend     |            
+|  React.js  |                              |   Node.js      |
+|____________|                              |________________|
+
+       |                                            |
+       |                                            |
+       V                                            V
+ _____________                            __________________________
+|             |                          |                          |          
+| React Chart |                          |    Mock Data Generator   |            
+|  Components |                          |     Random Generator     |
+|_____________|                          |__________________________|
+
+
+
+**Explanation:**
+
+* **Frontend (React):** The user interface built with React, responsible for displaying the analytics data. It periodically fetches data from the backend.
+* **Backend (Node.js):** A simple server built with Node.js and Express. It hosts an API endpoint (`/api/traffic`) that serves the mock traffic data.
+* **Mock Data Generation:** The backend itself contains the logic to generate simulated website traffic data. The `generateMockData` function creates new data on each request.
+* **Data Flow:** The frontend initiates HTTP GET requests to the backend's `/api/traffic` endpoint at a set interval (polling). The backend responds with the current mock data in JSON format. The frontend then updates its state and re-renders the UI with the new data.
+
+## 2. Data Flow Explanation
+
+1.  **Initial Load:** When the user opens the dashboard in their browser, the React application is loaded.
+2.  **Periodic Request (Polling):** The `TrafficDashboard` component in the frontend uses the `useEffect` hook with `setInterval` to trigger the `fetchTrafficData` function every 3 seconds.
+3.  **API Call:** The `fetchTrafficData` function makes an HTTP GET request to `http://localhost:5000/api/traffic`.
+4.  **Data Generation (Backend):** Upon receiving the request, the Express route handler for `/api/traffic` calls the `generateMockData` function. This function generates a new set of `active_users`, `page_views`, and `avg_session_duration` along with a timestamp.
+5.  **JSON Response:** The backend sends the generated mock data back to the frontend as a JSON response.
+6.  **State Update (Frontend):** The frontend receives the JSON data and updates its local state using `setTrafficData`. This triggers a re-render of the `TrafficDashboard` component and its child components.
+7.  **UI Update:** The child components (`ActiveUsersCard`, `PageViewsChart`, `SessionDurationGauge`) receive the updated data via props and update their display accordingly. For the `PageViewsChart`, new data points are added to the chart's dataset, and the chart is re-rendered.
+
+## 3. Tech Stack Breakdown
+
+* **Frontend:**
+    * **React:** For building the user interface and managing components.
+    * **Create React App:** For setting up the React development environment.
+    * **Chart.js:** For creating the line chart for page views.
+    * **react-chartjs-2:** A React wrapper for Chart.js, simplifying its integration.
+    * **SCSS:** For styling the components.
+
+* **Backend:**
+    * **Node.js:** The JavaScript runtime environment for the server.
+    * **Express:** A minimal web application framework for Node.js, used for creating the API endpoint.
+    * **cors:** Middleware for enabling Cross-Origin Resource Sharing, allowing the frontend to make requests to the backend running on a different port.
+
+## 4. Real-Time Logic Flow (Polling)
+
+1.  **Initialization:** The `TrafficDashboard` component mounts.
+2.  **Interval Setup:** The `useEffect` hook sets up an interval timer using `setInterval` that calls `fetchTrafficData` every 3000 milliseconds (3 seconds).
+3.  **Data Fetch:** `fetchTrafficData` makes an asynchronous HTTP GET request to the backend API (`/api/traffic`).
+4.  **Response Handling:** Once the backend responds with the new data, the frontend parses the JSON response.
+5.  **State Update:** The `setTrafficData` function updates the component's state with the new values for active users, page views, and average session duration. For the `page_views` and `timestamps`, new data points are added while keeping a history of the last 10 points for the chart.
+6.  **UI Re-render:** The state update triggers a re-render of the component tree, causing the child components to display the latest data.
+7.  **Cleanup:** When the `TrafficDashboard` component unmounts, the `useEffect` hook's cleanup function (`clearInterval(intervalId)`) is called to stop the polling interval, preventing memory leaks.
+
+## 5. Mock Data Design
+
+The mock data is generated by the `generateMockData` function in the backend. It returns a JSON object with the following structure:
+
+```json
+{
+  "timestamp": "2025-04-14T06:21:00.000Z",
+  "active_users": 78,
+  "page_views": 135,
+  "avg_session_duration": 3.2
+}
