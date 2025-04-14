@@ -1,6 +1,5 @@
-// frontend/src/components/SessionDurationGauge.js
 import React from 'react';
-import '../styles/SessionDurationGauge.scss'; // Adjust the path as necessary
+import '../styles/SessionDurationGauge.scss';
 
 const SessionDurationGauge = ({ avgSessionDuration }) => {
   const percentage = (avgSessionDuration / 10) * 100; // Assuming a max reasonable session of 10 minutes

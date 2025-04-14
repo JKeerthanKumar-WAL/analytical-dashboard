@@ -1,6 +1,5 @@
-// frontend/src/components/ActiveUsersCard.js
 import React from 'react';
-import '../styles/ActiveUsersCard.scss'; // Adjust the path as necessary
+import '../styles/ActiveUsersCard.scss';
 
 const ActiveUsersCard = ({ activeUsers }) => {
   return (

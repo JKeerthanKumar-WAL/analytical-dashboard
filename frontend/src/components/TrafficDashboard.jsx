@@ -1,9 +1,8 @@
-// frontend/src/components/TrafficDashboard.js
 import React, { useState, useEffect } from 'react';
 import ActiveUsersCard from './ActiveUsersCard';
 import PageViewsChart from './PageViewsChart';
 import SessionDurationGauge from './SessionDurationGauge';
-import '../styles/TrafficDashboard.scss'; // Adjust the path as necessary
+import '../styles/TrafficDashboard.scss';
 
 const TrafficDashboard = () => {
   const [trafficData, setTrafficData] = useState({
